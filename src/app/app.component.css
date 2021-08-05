@@ -1,0 +1,14 @@
+
+a {
+    color: #707070;
+}
+.footer{
+    position: absolute;
+    width: 100%;
+    height: 40px;
+    bottom: 0;
+    text-align: center;
+    color: #ffffff;
+    background-color: rgb(12, 23, 34);
+    
+}
