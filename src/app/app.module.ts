@@ -4,21 +4,19 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AddEmployeeComponent } from './employee/add-employee/add-employee.component';
 import { ListEmployeeComponent } from './employee/list-employee/list-employee.component';
-import { UpdateEmployeeComponent } from './employee/update-employee/update-employee.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddEmployeeComponent,
-    ListEmployeeComponent,
-    UpdateEmployeeComponent
+    ListEmployeeComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

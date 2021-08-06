@@ -1,4 +1,6 @@
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EmployeeService } from 'src/app/shared/employee.service';
 import { Employee } from '../employee';
@@ -10,7 +12,8 @@ import { Employee } from '../employee';
 })
 export class ListEmployeeComponent implements OnInit {
 
-  employees : Employee[];
+  employees: Employee[];
+  editEmployee: Employee;
 
   constructor(private employeeService:EmployeeService , private router:Router) { }
 
@@ -18,10 +21,21 @@ export class ListEmployeeComponent implements OnInit {
     this.getEmployee();
   }
 
-  private getEmployee() {
-    this.employeeService.getEmployee().subscribe(data=>{
-      this.employees=data;
-    })
+  // private getEmployee() {
+  //   this.employeeService.getEmployee().subscribe(data=>{
+  //     this.employees=data;
+  //   })
+  // }
+
+  public getEmployee(): void {
+    this.employeeService.getEmployee().subscribe(
+      (response: Employee[])=> {
+        this.employees = response;
+      },
+      (error: HttpErrorResponse)=> {
+        alert(error.message);
+      }
+    );
   }
 
   private updateEmlpoyee(employeeId:number) {
@@ -34,6 +48,32 @@ export class ListEmployeeComponent implements OnInit {
     })
   }
 
+  public onAddEmloyee(addForm : NgForm): void {
+    document.getElementById('add-employee-form').click();
+    this.employeeService.addEmployee(addForm.value).subscribe(
+      (response: Employee)=> {
+        console.log(response);
+        this.getEmployee();
+      },
+      (error: HttpErrorResponse)=> {
+        alert(error.message);
+      }
+    )
+  }
+
+  public onUpdateEmployee(employee: Employee): void {
+    this.employeeService.updateEmployee(employee).subscribe(
+      (response: Employee)=> {
+        console.log(response);
+        this.getEmployee();
+      },
+      (error: HttpErrorResponse)=> {
+        alert(error.message);
+      }
+    );
+  }
+  
+
   public onOpenModel(employee: Employee, mode: String): void {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
@@ -41,19 +81,20 @@ export class ListEmployeeComponent implements OnInit {
     button.style.display='none';
     button.setAttribute('data-toggle' , 'modal');
     if(mode === 'add') {
-      button.setAttribute('data-toggle' , '#addEmployeeModal');
+      button.setAttribute('data-target' , '#addEmployeeModal');
     }
     if(mode === 'delete') {
-      button.setAttribute('data-toggle' , '#deleteEmployeeModal');
+      button.setAttribute('data-target' , '#deleteEmployeeModal'); 
     }
     if(mode === 'update') {
-      button.setAttribute('data-toggle' , '#updateEmployeeModal');
+      this.editEmployee = employee; 
+      button.setAttribute('data-target' , '#updateEmployeeModal');
     }
 
     container.appendChild(button);
     button.click();
   }
 
-
-
 }
+
+// this.editEmployee = employee ==> editEmployee(in this class employee) equal to the employee
