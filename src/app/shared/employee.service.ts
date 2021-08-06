@@ -24,8 +24,8 @@ export class EmployeeService {
     return this.httpClient.put<Employee>(`${this.baseUrl}/update`,employee)
   }
 
-  public deleteEmployee(employeeId:number):Observable<Object>{
-    return this.httpClient.delete<Object>(`${this.baseUrl}/delete/${employeeId}`)
+  public deleteEmployee(employeeId:number):Observable<void>{
+    return this.httpClient.delete<void>(`${this.baseUrl}/delete/${employeeId}`)
   }
 
   

@@ -12,10 +12,11 @@ import { Employee } from '../employee';
 })
 export class ListEmployeeComponent implements OnInit {
 
-  employees: Employee[];
-  editEmployee: Employee;
+  public employees: Employee[];
+  public editEmployee: Employee;
+  public deleteEmployee: Employee;
 
-  constructor(private employeeService:EmployeeService , private router:Router) { }
+  constructor(private employeeService: EmployeeService, private router: Router) { }
 
   ngOnInit() {
     this.getEmployee();
@@ -29,66 +30,71 @@ export class ListEmployeeComponent implements OnInit {
 
   public getEmployee(): void {
     this.employeeService.getEmployee().subscribe(
-      (response: Employee[])=> {
+      (response: Employee[]) => {
         this.employees = response;
       },
-      (error: HttpErrorResponse)=> {
+      (error: HttpErrorResponse) => {
         alert(error.message);
       }
     );
   }
 
-  private updateEmlpoyee(employeeId:number) {
-    this.router.navigate(['updated-employee' , employeeId]);
-  }
-
-  private deleteEmployee(employeeId:number) {
-    this.employeeService.deleteEmployee(employeeId).subscribe(data=>{
-      this.getEmployee();
-    })
-  }
-
-  public onAddEmloyee(addForm : NgForm): void {
+  public onAddEmloyee(addForm: NgForm): void {
     document.getElementById('add-employee-form').click();
     this.employeeService.addEmployee(addForm.value).subscribe(
-      (response: Employee)=> {
+      (response: Employee) => {
         console.log(response);
         this.getEmployee();
+        addForm.reset();
       },
-      (error: HttpErrorResponse)=> {
+      (error: HttpErrorResponse) => {
         alert(error.message);
+        addForm.reset();
       }
     )
   }
 
   public onUpdateEmployee(employee: Employee): void {
     this.employeeService.updateEmployee(employee).subscribe(
-      (response: Employee)=> {
+      (response: Employee) => {
         console.log(response);
         this.getEmployee();
       },
-      (error: HttpErrorResponse)=> {
+      (error: HttpErrorResponse) => {
         alert(error.message);
       }
     );
   }
-  
+
+  public onDeleteEmployee(employeeId: number): void {
+    this.employeeService.deleteEmployee(employeeId).subscribe(
+      (response: void) => {
+        console.log(response);
+        this.getEmployee();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
 
   public onOpenModel(employee: Employee, mode: String): void {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
-    button.type='button';
-    button.style.display='none';
-    button.setAttribute('data-toggle' , 'modal');
-    if(mode === 'add') {
-      button.setAttribute('data-target' , '#addEmployeeModal');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    if (mode === 'add') {
+      button.setAttribute('data-target', '#addEmployeeModal');
     }
-    if(mode === 'delete') {
-      button.setAttribute('data-target' , '#deleteEmployeeModal'); 
+    if (mode === 'delete') {
+      this.deleteEmployee = employee;
+      button.setAttribute('data-target', '#deleteEmployeeModal');
     }
-    if(mode === 'update') {
-      this.editEmployee = employee; 
-      button.setAttribute('data-target' , '#updateEmployeeModal');
+    if (mode === 'update') {
+      this.editEmployee = employee;
+      button.setAttribute('data-target', '#updateEmployeeModal');
     }
 
     container.appendChild(button);
